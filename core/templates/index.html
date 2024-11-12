@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div id="map">
+</div>
+
+{{ characters|json_script:"characters-json"}}
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let map = createMap([45.5, -90], 1);
+        let characters = JSON.parse(document.getElementById('characters-json').textContent)
+
+        let markerFeatureGroup = L.featureGroup().addTo(map)
+        
+        for (let character of characters) {
+            L.marker([character[2], character[0]]).addTo(markerFeatureGroup);
+        }
+
+        setInterval(() => updateCharacterMarkers(markerFeatureGroup), 5000)
+    });
+</script>
+
+{% endblock %}
